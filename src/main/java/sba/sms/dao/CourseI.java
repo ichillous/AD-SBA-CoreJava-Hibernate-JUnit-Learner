@@ -12,5 +12,4 @@ public interface CourseI {
     void createCourse(Course course);
     Course getCourseById(int courseId);
     List<Course> getAllCourses();
-
 }

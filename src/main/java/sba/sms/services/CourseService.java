@@ -16,6 +16,30 @@ import java.util.List;
  * CourseI interface, overrides all abstract service methods and
  * provides implementation for each method.
  */
-public class CourseService {
 
+public class CourseService implements CourseI {
+    private HibernateUtil hibernateUtil;
+
+    private Session session;
+    public CourseService() {
+        this.session = HibernateUtil.getSessionFactory().openSession();
+    }
+
+    public void createCourse(Course course) {
+        Transaction tx = session.beginTransaction();
+        session.save(course);
+        tx.commit();
+    }
+
+    @Override
+    public Course getCourseById(int courseId) {
+        return session.get(Course.class, courseId);
+    }
+
+    public List<Course> getAllCourses() {
+        Transaction tx = session.beginTransaction();
+        List<Course> courses = (List<Course>) session.createQuery("from Course").list();
+        tx.commit();
+        return courses;
+    }
 }

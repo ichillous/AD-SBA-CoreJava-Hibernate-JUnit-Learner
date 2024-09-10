@@ -4,9 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.LinkedHashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -16,11 +14,35 @@ import java.util.Set;
  * data. The Student class can be viewed as the owner of the bi-directional relationship.
  * Implement Lombok annotations to eliminate boilerplate code.
  */
-
+@Entity
+@Table(name = "student")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Student {
+    @Id
+    @Column(name = "email", length = 50)
+    private String email;
 
+    @Column(name = "name", nullable = false, length = 50)
+    private String name;
 
+    @Column(name = "password", nullable = false, length = 50)
+    private String password;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.REMOVE, CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinTable(
+            name = "student_courses",
+            joinColumns = @JoinColumn(name = "student_email"),
+            inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
+    private Set<Course> courses = new HashSet<>();
+    public Student(String email, String name, String password) {
+        this.email = email;
+        this.name = name;
+        this.password = password;
     }
+}
 
 
 
